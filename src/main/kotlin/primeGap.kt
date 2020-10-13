@@ -18,7 +18,6 @@ fun main (){
 fun isPrime (number: Long): Boolean {
     for (i in 2..number / 2){
         if (number % i == 0L){
-
             return false
         }
     }
@@ -27,8 +26,17 @@ fun isPrime (number: Long): Boolean {
 }
 
 fun gap(g:Int, m:Long, n:Long):LongArray {
-    var previousPrime = n
-    for (i in m..n+1){
+//    var previousPrime = n
+//    for (i in m..n+1){
+//        if (isPrime(i)){
+//            if (i - previousPrime == g.toLong()){
+//                return mutableListOf(previousPrime, i).toLongArray()
+//            }
+//            previousPrime = i
+//        }
+//    }
+    var previousPrime = 0L
+    for (i in m..n){
         if (isPrime(i)){
             if (i - previousPrime == g.toLong()){
                 return mutableListOf(previousPrime, i).toLongArray()
