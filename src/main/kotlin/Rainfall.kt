@@ -1,35 +1,69 @@
 import kotlin.math.pow
-import kotlin.math.sqrt
 
 fun main(){
-
-    fun mean(town:String, strng:String):Double {
-        return ( (getDblListTown(town, strng).average()) )
-    }
-    fun variance(town:String, strng:String):Double {
-        val mean = mean(town, strng)
-        val list = getDblListTown(town, strng)
-        var accum = 0.0
-        for (i in list) {
-            accum += (i - mean).pow(2.0)
-        }
-        return accum/list.size
-    }
+    println(mean("London", Rainfall.data))
+    println(variance("London", Rainfall.data))
+    //println(mean("NY", Rainfall.data))
 }
-fun getDblListTown (town: String, str: String): List<Double> {
-    val temp = str.lines().filter {it.startsWith(town)}
-    var myDouble = listOf<Double>()
+fun mean(town:String, strng:String):Double {
+    var sum = 0.0
 
-    for (i in temp) {
-            var myArray = i.substringAfter(":").splitToSequence(" ", ",")
-            for (item in myArray){
-                if(item.toDoubleOrNull() is Double){
-                    myDouble += item.toDouble()
-                }
+    val values = getTownValues(
+            getTownList(town, strng)
+    ).flatMap{
+        it.toList()
+    }
+
+    if (values.isEmpty()){
+        return -1.0
+    }
+    else {
+        for (i in values){
+            if (i != null) {
+                sum += i
             }
+        }
     }
-    return myDouble
+    return sum/values.size
 }
+
+fun variance(town:String, strng:String):Double {
+    val values = getTownValues(
+        getTownList(town, strng)
+    ).flatMap{
+        it.toList()
+    }
+
+    if (values.isEmpty()){
+        return -1.0
+    }
+    else {
+        val mean = mean(town, strng)
+        var accum = 0.0
+        for (i in values) {
+            if (i != null){
+                accum += (i.minus(mean)).pow(2.0)
+            }
+        }
+        return accum/values.size
+    }
+}
+
+fun getTownList (town: String, strng: String) = strng.lines()
+    .filter { it.substringBefore(":").contentEquals(town) }
+    .map {it.substringAfter(":")
+    }
+
+fun getTownValues (str: List<String>) = str.map {it.splitToSequence(" ", ",")
+    .map {
+        it.toDoubleOrNull()
+    }
+    .filter {
+        it?.toDouble() is Double
+    }
+    .toList()
+}
+
 class Rainfall {
     companion object {
         var data = (
