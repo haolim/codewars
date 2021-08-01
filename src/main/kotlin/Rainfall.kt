@@ -1,68 +1,89 @@
 import kotlin.math.pow
 
 fun main(){
-    println(mean("London", Rainfall.data))
-    println(variance("London", Rainfall.data))
+//    println(mean("London", Rainfall.data))
+//    println(variance("London", Rainfall.data))
     //println(mean("NY", Rainfall.data))
+    println(getRainfallForTown("London", Rainfall.data))
+    println(mean("London", Rainfall.data))
 }
-fun mean(town:String, strng:String):Double {
+private const val NO_TOWN_RECORD = -1.0
+
+//fun getRainfallForTown (town: String, strng: String): List<Double>?
+fun getRainfallForTown (town: String, strng:String)
+= strng.lines()
+    .singleOrNull {it.contains("$town:")}
+    ?.split(",")
+    ?.map {it.substringAfter(' ').toDouble()
+    }
+
+fun mean(town: String, strng:String): Double = getRainfallForTown(town, strng)?.average() ?: NO_TOWN_RECORD
+
+fun variance (town:String, strng:String): Double = getRainfallForTown(town, strng)?.run {
+    val avg = average()
     var sum = 0.0
+    forEach { sum += Math.pow(it-avg, 2.0)}
+    sum / size
+}?: NO_TOWN_RECORD
 
-    val values = getTownValues(
-            getTownList(town, strng)
-    ).flatMap{
-        it.toList()
-    }
-
-    if (values.isEmpty()){
-        return -1.0
-    }
-    else {
-        for (i in values){
-            if (i != null) {
-                sum += i
-            }
-        }
-    }
-    return sum/values.size
-}
-
-fun variance(town:String, strng:String):Double {
-    val values = getTownValues(
-        getTownList(town, strng)
-    ).flatMap{
-        it.toList()
-    }
-
-    if (values.isEmpty()){
-        return -1.0
-    }
-    else {
-        val mean = mean(town, strng)
-        var accum = 0.0
-        for (i in values) {
-            if (i != null){
-                accum += (i.minus(mean)).pow(2.0)
-            }
-        }
-        return accum/values.size
-    }
-}
-
-fun getTownList (town: String, strng: String) = strng.lines()
-    .filter { it.substringBefore(":").contentEquals(town) }
-    .map {it.substringAfter(":")
-    }
-
-fun getTownValues (str: List<String>) = str.map {it.splitToSequence(" ", ",")
-    .map {
-        it.toDoubleOrNull()
-    }
-    .filter {
-        it?.toDouble() is Double
-    }
-    .toList()
-}
+//fun mean(town:String, strng:String):Double {
+//    var sum = 0.0
+//
+//    val values = getTownValues(
+//            getTownList(town, strng)
+//    ).flatMap{
+//        it.toList()
+//    }
+//
+//    if (values.isEmpty()){
+//        return -1.0
+//    }
+//    else {
+//        for (i in values){
+//            if (i != null) {
+//                sum += i
+//            }
+//        }
+//    }
+//    return sum/values.size
+//}
+//
+//fun variance(town:String, strng:String):Double {
+//    val values = getTownValues(
+//        getTownList(town, strng)
+//    ).flatMap{
+//        it.toList()
+//    }
+//
+//    if (values.isEmpty()){
+//        return -1.0
+//    }
+//    else {
+//        val mean = mean(town, strng)
+//        var accum = 0.0
+//        for (i in values) {
+//            if (i != null){
+//                accum += (i.minus(mean)).pow(2.0)
+//            }
+//        }
+//        return accum/values.size
+//    }
+//}
+//
+//fun getTownList (town: String, strng: String) = strng.lines()
+//    .filter { it.substringBefore(":").contentEquals(town) }
+//    .map {it.substringAfter(":")
+//    }
+//
+//fun getTownValues (str: List<String>) = str.map {it.splitToSequence(" ", ",")
+//    .map {
+//        it.toDoubleOrNull()
+//    }
+//    .filter {
+//        it?.toDouble() is Double
+//    }
+//    .toList()
+//}
 
 class Rainfall {
     companion object {
