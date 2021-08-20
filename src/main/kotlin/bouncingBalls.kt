@@ -1,10 +1,4 @@
 
-
-fun main () {
-    println(bouncingBall (3.0, 0.66, 1.5)) // 3
-    println(bouncingBall (30.0, 0.66, 1.5)) // 15
-}
-
 fun bouncingBall (h: Double, bounce: Double, window:Double) : Int {
     var value = checkValid(h, bounce, window)
     if (value==1){
@@ -30,4 +24,9 @@ fun checkValid (h: Double, bounce: Double, window: Double): Int {
         else -> 1 // initial fall is seen
     }
     return value
+}
+
+fun main () {
+    println(bouncingBall (3.0, 0.66, 1.5)) // 3
+    println(bouncingBall (30.0, 0.66, 1.5)) // 15
 }

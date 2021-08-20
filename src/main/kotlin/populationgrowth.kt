@@ -5,7 +5,7 @@ fun nbYear(pp0:Int, percent:Double, aug:Int, p:Int):Int {
     var count = 0
     while (value < p){
         count += 1
-        value = (value + (value * (percent/100)) + aug).toDouble()
+        value = (value + (value * (percent/100)) + aug)
     }
     return count
 }
